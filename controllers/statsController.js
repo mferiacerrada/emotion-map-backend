@@ -17,7 +17,8 @@ const getStats = (req, res) => {
     const stats = calcularEstadisticas(usuarios);
     console.log("Estadísticas calculadas:", stats);
 
-    res.json(stats);
+    // Devolver solo las estadísticas
+    res.json({ stats });
   } catch (error) {
     console.error("Error calculando estadísticas:", error);
     res.status(500).json({ error: "Error calculando estadísticas." });
