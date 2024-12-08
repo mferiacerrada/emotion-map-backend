@@ -52,7 +52,7 @@ const cities = fs
       population: parseInt(parts[14], 10), // Población (columna 14)
     };
   })
-  .filter((city) => city.population > 150000); // Filtrar ciudades con más de 150,000 habitantes
+  .filter((city) => city.population > 300000); // Filtrar ciudades con más de 150,000 habitantes
 
 // Cargar datos de países
 const countries = fs

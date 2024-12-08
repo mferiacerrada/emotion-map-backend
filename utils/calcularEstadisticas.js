@@ -63,13 +63,13 @@ const calcularEstadisticas = (usuarios) => {
   stats.topPaises = Object.entries(paises)
     .map(([pais, data]) => ({ pais, ...data }))
     .sort((a, b) => b.intensidadTotal - a.intensidadTotal)
-    .slice(0, 10);
+    .slice(0, 25);
 
   // Ordenar y seleccionar las principales ciudades
   stats.topCiudades = Object.entries(ciudades)
     .map(([ciudad, data]) => ({ ciudad, ...data }))
     .sort((a, b) => b.intensidadTotal - a.intensidadTotal)
-    .slice(0, 10);
+    .slice(0, 25);
 
   return stats;
 };

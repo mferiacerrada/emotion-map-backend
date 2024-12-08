@@ -44,7 +44,7 @@ const coloresDisponibles = [
 ];
 
 // Generar usuarios falsos iniciales
-function generarUsuariosFalsosConcentrados(cantidad = 50) {
+function generarUsuariosFalsosConcentrados(cantidad = 5000) {
   const regiones = [
     { minLat: 40.4, maxLat: 40.5, minLng: -3.7, maxLng: -3.6 }, // Madrid
     { minLat: 48.85, maxLat: 48.9, minLng: 2.3, maxLng: 2.4 }, // París
