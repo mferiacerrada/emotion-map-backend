@@ -8,9 +8,17 @@ const statsRoutes = require('./routes/statsRoutes'); // Rutas de estadísticas
 const { resolverUsuariosSinCityCountry } = require('./utils/clustering'); // Lógica de clustering
 const { cities, countries } = require('./utils/loadGeoData'); // Cargar datos geográficos
 const cors = require('cors');
+const mongoose = require('mongoose');
+const User = require('./models/User');
+const ondasRoute = require('./routes/ondasRoute');
 
-
-
+// Conecta a MongoDB
+mongoose.connect('mongodb://localhost:27017/EmotionMapDb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('Conectado a MongoDB'))
+  .catch(err => console.error('Error al conectar a MongoDB:', err));
 
 const app = express();
 const server = http.createServer(app);
@@ -20,13 +28,13 @@ const io = new Server(server, {
   }
 });
 
-
-
 // Array de usuarios
 global.usuarios = [];
 
 app.use(express.json()); // Middleware para procesar JSON
 app.use('/api', statsRoutes());
+app.use('/api', ondasRoute());
+
 app.use(cors({
   origin: 'http://localhost:3000', // Cambia esto a la URL del frontend en producción
 }));
@@ -43,8 +51,8 @@ const coloresDisponibles = [
   "rgba(0, 255, 255, 0.8)"   // Cian
 ];
 
-// Generar usuarios falsos iniciales
-function generarUsuariosFalsosConcentrados(cantidad = 5000) {
+// Generar usuarios falsos iniciales y guardarlos en MongoDB
+function generarUsuariosFalsosConcentrados(cantidad = 250) {
   const regiones = [
     { minLat: 40.4, maxLat: 40.5, minLng: -3.7, maxLng: -3.6 }, // Madrid
     { minLat: 48.85, maxLat: 48.9, minLng: 2.3, maxLng: 2.4 }, // París
@@ -74,6 +82,22 @@ function generarUsuariosFalsosConcentrados(cantidad = 5000) {
       const size = Math.floor(Math.random() * 20) + 20;
       const intensidad = size / 4;
 
+      const user = new User({
+        userId,
+        lat,
+        lng,
+        color,
+        size,
+        intensidad,
+        city: null,
+        country: null,
+        timestamp: new Date(),
+      });
+
+      user.save()
+        .then(() => console.log(`Usuario guardado: ${user.userId}`))
+        .catch(err => console.error(`Error al guardar usuario: ${err}`));
+
       global.usuarios.push({ userId, lat, lng, color, size, intensidad, city: null, country: null });
     }
   });
@@ -88,20 +112,40 @@ io.on('connection', (socket) => {
 
   socket.on('update_location', (data) => {
     const { userId, lat, lng, color, size, intensidad } = data;
-    const index = global.usuarios.findIndex(u => u.userId === userId);
 
-    if (index !== -1) {
-      // Actualizar usuario existente
-      global.usuarios[index] = { ...global.usuarios[index], lat, lng, color, size, intensidad };
+    // Crear un nuevo registro para cada actualización en la base de datos
+    const userUpdate = new User({
+      userId,
+      lat,
+      lng,
+      color,
+      size,
+      intensidad,
+      city: null,
+      country: null,
+      timestamp: new Date(),
+    });
+
+    userUpdate.save()
+      .then(() => {
+        console.log(`Datos de ${userId} registrados en la base de datos.`);
+      })
+      .catch(err => console.error('Error al guardar actualización:', err));
+
+    // Actualizar en memoria para el mapa
+    const userIndex = global.usuarios.findIndex(u => u.userId === userId);
+    if (userIndex !== -1) {
+      // Si el usuario ya existe, actualizamos su estado en memoria
+      global.usuarios[userIndex] = { userId, lat, lng, color, size, intensidad, city: null, country: null };
     } else {
-      // Añadir nuevo usuario
+      // Si el usuario no existe en memoria, lo agregamos
       global.usuarios.push({ userId, lat, lng, color, size, intensidad, city: null, country: null });
     }
 
     // Resolver city y country para usuarios sin completar
     resolverUsuariosSinCityCountry(global.usuarios, cities);
 
-    // Emitir lista actualizada de usuarios
+    // Emitir lista actualizada de usuarios para el mapa
     io.emit('locations', global.usuarios);
   });
 
