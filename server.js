@@ -192,7 +192,7 @@ app.use('/api', resolveRoutes);
 //   res.sendFile(path.resolve(__dirname, '..', 'emotion-map', 'build', 'index.html'));
 // });
 
-// // Iniciar servidor
-// server.listen(3001, () => {
-//   console.log('Servidor escuchando en http://localhost:3001');
-// });
+// Iniciar servidor
+server.listen(3001, () => {
+  console.log('Servidor escuchando en http://localhost:3001');
+});
