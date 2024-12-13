@@ -4,8 +4,11 @@
 const fs = require('fs');
 const path = require('path');
 
+
+console.log(fs.readdirSync(path.join(__dirname)));
 const citiesFilePath = path.resolve(__dirname, 'cities15000.txt');
 const countryFilePath = path.resolve(__dirname, 'countryInfo.txt');
+
 
 
 // Cargar datos de ciudades
