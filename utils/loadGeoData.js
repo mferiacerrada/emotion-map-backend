@@ -40,7 +40,9 @@ const path = require('path');
 
 // Cargar datos de ciudades
 const cities = fs
-  .readFileSync(path.join(__dirname, '../data/cities15000.txt'), 'utf8')
+
+  .readFileSync(path.join(__dirname, 'data', 'cities15000.txt'), 'utf8')
+  // .readFileSync(path.join(__dirname, '../data/cities15000.txt'), 'utf8')
   .split('\n')
   .map((line) => {
     const parts = line.split('\t');
@@ -56,7 +58,8 @@ const cities = fs
 
 // Cargar datos de países
 const countries = fs
-  .readFileSync(path.join(__dirname, '../data/countryInfo.txt'), 'utf8')
+  .readFileSync(path.join(__dirname, 'data','countryInfo.txt'), 'utf8')
+  // .readFileSync(path.join(__dirname, '../data/countryInfo.txt'), 'utf8')
   .split('\n')
   .filter((line) => line && !line.startsWith('#'))
   .map((line) => {
