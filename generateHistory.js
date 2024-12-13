@@ -79,4 +79,4 @@ const generarHistorialFalso = async (cantidadDias, puntosPorDia) => {
 };
 
 // Llamar a la función para generar el historial
-generarHistorialFalso(180, 100); // 180 días (6 meses) con 100 puntos por día
+generarHistorialFalso(180, 500); // 180 días (6 meses) con 100 puntos por día
