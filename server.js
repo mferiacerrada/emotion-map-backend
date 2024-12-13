@@ -53,7 +53,7 @@ app.use('/api', ondasRoute());
 //   origin: 'http://localhost:3000', // Cambia esto a la URL del frontend en producción
 // }));
 
-const cors = require('cors');
+
 app.use(cors({
   origin: 'https://emotionmap.es',  // URL de tu frontend
   methods: ['GET', 'POST'],
@@ -186,13 +186,13 @@ app.use('/api', statsRoutesInstance);
 // Rutas de resolución
 app.use('/api', resolveRoutes);
 
-// Servir el frontend de React
-app.use(express.static(path.join(__dirname, '..', 'emotion-map', 'build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'emotion-map', 'build', 'index.html'));
-});
+// // Servir el frontend de React
+// app.use(express.static(path.join(__dirname, '..', 'emotion-map', 'build')));
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, '..', 'emotion-map', 'build', 'index.html'));
+// });
 
-// Iniciar servidor
-server.listen(3001, () => {
-  console.log('Servidor escuchando en http://localhost:3001');
-});
+// // Iniciar servidor
+// server.listen(3001, () => {
+//   console.log('Servidor escuchando en http://localhost:3001');
+// });
