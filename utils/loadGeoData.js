@@ -13,11 +13,11 @@ console.log("Ruta de países:", countryFilePath);
 
 
 
-const citiesData = fs.readFileSync(citiesFilePath, 'utf8');
-console.log("Primeros caracteres del archivo de ciudades:", citiesData.slice(0, 100));
+// const citiesData = fs.readFileSync(citiesFilePath, 'utf8');
+// console.log("Primeros caracteres del archivo de ciudades:", citiesData.slice(0, 100));
 
-const countriesData = fs.readFileSync(countryFilePath, 'utf8');
-console.log("Primeros caracteres del archivo de países:", countriesData.slice(0, 100));
+// const countriesData = fs.readFileSync(countryFilePath, 'utf8');
+// console.log("Primeros caracteres del archivo de países:", countriesData.slice(0, 100));
 
 
 
