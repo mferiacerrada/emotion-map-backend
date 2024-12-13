@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const ondasRoute = require('./routes/ondasRoute');
 
-const frontendUrl = "https://emotionmap.es"; // Cambia esta URL por la de tu frontend de Vercel
+const frontendUrl = "https://emotion-rdaaznfn7-marcos-ferias-projects.vercel.app/"; // Cambia esta URL por la de tu frontend de Vercel
 
 const fs = require('fs');
 console.log(fs.readdirSync(path.join(__dirname, 'utils')));
@@ -38,7 +38,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://emotion-map-five.vercel.app/", // URL del frontend desplegado en producción
+    origin: "https://emotion-rdaaznfn7-marcos-ferias-projects.vercel.app/", // URL del frontend desplegado en producción
     methods: ["GET", "POST"],
   }
 });
