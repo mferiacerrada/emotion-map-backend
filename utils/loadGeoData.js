@@ -4,8 +4,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const citiesFilePath = path.resolve(__dirname, '..', 'data', 'cities15000.txt');
-const countryFilePath = path.resolve(__dirname, '..', 'data', 'countryInfo.txt');
+const citiesFilePath = path.resolve(__dirname, 'cities15000.txt');
+const countryFilePath = path.resolve(__dirname, 'countryInfo.txt');
 
 
 // Cargar datos de ciudades
