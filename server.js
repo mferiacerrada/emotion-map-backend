@@ -12,6 +12,8 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const ondasRoute = require('./routes/ondasRoute');
 
+const frontendUrl = "https://emotionmap.es"; // Cambia esta URL por la de tu frontend de Vercel
+
 const fs = require('fs');
 console.log(fs.readdirSync(path.join(__dirname, 'utils')));
 
@@ -47,10 +49,15 @@ app.use(express.json()); // Middleware para procesar JSON
 app.use('/api', statsRoutes());
 app.use('/api', ondasRoute());
 
-app.use(cors({
-  origin: 'http://localhost:3000', // Cambia esto a la URL del frontend en producción
-}));
+// app.use(cors({
+//   origin: 'http://localhost:3000', // Cambia esto a la URL del frontend en producción
+// }));
 
+const cors = require('cors');
+app.use(cors({
+  origin: 'https://emotionmap.es',  // URL de tu frontend
+  methods: ['GET', 'POST'],
+}));
 // Colores disponibles para usuarios
 const coloresDisponibles = [
   "rgba(255, 0, 0, 0.8)",    // Rojo
