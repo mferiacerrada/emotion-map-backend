@@ -38,10 +38,10 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: "https://emotionmap.es", // URL del frontend desplegado en producción
+    methods: ["GET", "POST"],
   }
 });
-
 // Array de usuarios
 global.usuarios = [];
 
@@ -49,15 +49,7 @@ app.use(express.json()); // Middleware para procesar JSON
 app.use('/api', statsRoutes());
 app.use('/api', ondasRoute());
 
-// app.use(cors({
-//   origin: 'http://localhost:3000', // Cambia esto a la URL del frontend en producción
-// }));
 
-
-app.use(cors({
-  origin: 'https://emotionmap.es',  // URL de tu frontend
-  methods: ['GET', 'POST'],
-}));
 // Colores disponibles para usuarios
 const coloresDisponibles = [
   "rgba(255, 0, 0, 0.8)",    // Rojo
@@ -193,6 +185,10 @@ app.use('/api', resolveRoutes);
 // });
 
 // Iniciar servidor
-server.listen(3001, () => {
-  console.log('Servidor escuchando en http://localhost:3001');
+
+const PORT = process.env.PORT || 3001;
+
+server.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+
