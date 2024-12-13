@@ -6,8 +6,17 @@ const path = require('path');
 
 
 console.log(fs.readdirSync(path.join(__dirname)));
+console.log("Ruta de ciudades:", citiesFilePath);
+console.log("Ruta de países:", countryFilePath);
+
 const citiesFilePath = path.resolve(__dirname, 'cities15000.txt');
 const countryFilePath = path.resolve(__dirname, 'countryInfo.txt');
+
+const citiesData = fs.readFileSync(citiesFilePath, 'utf8');
+console.log("Primeros caracteres del archivo de ciudades:", citiesData.slice(0, 100));
+
+const countriesData = fs.readFileSync(countryFilePath, 'utf8');
+console.log("Primeros caracteres del archivo de países:", countriesData.slice(0, 100));
 
 
 
