@@ -12,8 +12,17 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const ondasRoute = require('./routes/ondasRoute');
 
-// Conecta a MongoDB
-mongoose.connect('mongodb://localhost:27017/EmotionMapDb', {
+// Conecta a MongoDB LOCAL
+// mongoose.connect('mongodb://localhost:27017/EmotionMapDb', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// })
+//   .then(() => console.log('Conectado a MongoDB'))
+//   .catch(err => console.error('Error al conectar a MongoDB:', err));
+
+// Conecta a MongoDB CLoud
+
+mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluster.lbswe.mongodb.net/?retryWrites=true&w=majority&appName=EmotionMapCluster', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
