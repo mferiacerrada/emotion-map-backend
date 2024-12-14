@@ -17,16 +17,7 @@ const frontendUrl = "https://emotion-map-five.vercel.app"; // Cambia esta URL po
 const fs = require('fs');
 console.log(fs.readdirSync(path.join(__dirname, 'utils')));
 
-// Conecta a MongoDB LOCAL
-// mongoose.connect('mongodb://localhost:27017/EmotionMapDb', {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// })
-//   .then(() => console.log('Conectado a MongoDB'))
-//   .catch(err => console.error('Error al conectar a MongoDB:', err));
-
-// Conecta a MongoDB CLoud
-
+// Conecta a MongoDB Cloud
 mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluster.lbswe.mongodb.net/?retryWrites=true&w=majority&appName=EmotionMapCluster', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -36,23 +27,29 @@ mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluste
 
 const app = express();
 const server = http.createServer(app);
+
+// Configuración de CORS para las solicitudes HTTP
+app.use(cors({
+  origin: frontendUrl, // Permitir solicitudes solo de tu frontend desplegado en producción
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],  // Asegúrate de permitir los headers necesarios
+}));
+
+// Configuración de CORS para Socket.io
 const io = new Server(server, {
   cors: {
-    origin: "https://emotion-map-five.vercel.app", // URL del frontend desplegado en producción
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Access-Control-Allow-Origin"], // Asegúrate de permitir los headers necesarios
-  }
+    origin: frontendUrl, // Permitir conexiones WebSocket de tu frontend
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'], // Permitir encabezados necesarios para las conexiones
+  },
 });
+
 // Array de usuarios
 global.usuarios = [];
 
 app.use(express.json()); // Middleware para procesar JSON
 app.use('/api', statsRoutes());
 app.use('/api', ondasRoute());
-app.use(cors({
-  origin: 'https://emotion-map-five.vercel.app', // Permite solicitudes solo de tu dominio
-  methods: ["GET", "POST"],
-}));
 
 // Colores disponibles para usuarios
 const coloresDisponibles = [
@@ -85,7 +82,7 @@ function generarUsuariosFalsosConcentrados(cantidad = 10) {
     { minLat: 22.2, maxLat: 22.3, minLng: 114.1, maxLng: 114.2 }, // Hong Kong
     { minLat: -34.6, maxLat: -34.5, minLng: -58.4, maxLng: -58.3 }, // Buenos Aires
     { minLat: 41.9, maxLat: 42.0, minLng: 12.4, maxLng: 12.5 }, // Roma
-    { minLat: 52.5, maxLat: 52.6, minLng: 13.4, maxLng: 13.5 }
+    { minLat: 52.5, maxLat: 52.6, minLng: 13.4, maxLng: 13.5 } // Berlín
   ];
 
   regiones.forEach(({ minLat, maxLat, minLng, maxLng }) => {
@@ -189,10 +186,7 @@ app.use('/api', resolveRoutes);
 // });
 
 // Iniciar servidor
-
 const PORT = process.env.PORT || 3001;
-
 server.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
-
