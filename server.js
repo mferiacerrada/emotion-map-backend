@@ -36,19 +36,21 @@ mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluste
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "https://emotion-map-five.vercel.app", // URL del frontend desplegado en producción
-    methods: ["GET", "POST"],
-  }
-});
+// const io = new Server(server, {
+//   cors: {
+//     origin: "https://emotion-map-five.vercel.app", // URL del frontend desplegado en producción
+//     methods: ["GET", "POST"],
+//   }
+// });
 // Array de usuarios
 global.usuarios = [];
 
 app.use(express.json()); // Middleware para procesar JSON
 app.use('/api', statsRoutes());
 app.use('/api', ondasRoute());
-
+app.use(cors({
+  origin: 'https://emotion-map-five.vercel.app' // Permite solicitudes solo de tu dominio
+}));
 
 // Colores disponibles para usuarios
 const coloresDisponibles = [
