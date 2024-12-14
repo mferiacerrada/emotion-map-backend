@@ -28,12 +28,14 @@ mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluste
 const app = express();
 const server = http.createServer(app);
 
-// Configuración de CORS para las solicitudes HTTP
+const allowedOrigins = [frontendUrl, 'http://localhost:3000']; // Incluye tu URL local si es necesario
 app.use(cors({
-  origin: frontendUrl, // Permitir solicitudes solo de tu frontend desplegado en producción
+  origin: allowedOrigins,
   methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],  // Asegúrate de permitir los headers necesarios
+  allowedHeaders: ['Content-Type'],
+  credentials: true, // Si necesitas enviar cookies o credenciales
 }));
+
 
 // Configuración de CORS para Socket.io
 const io = new Server(server, {
