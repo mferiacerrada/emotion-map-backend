@@ -38,7 +38,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://emotion-map-five.vercel.app/", // URL del frontend desplegado en producción
+    origin: "https://emotion-map-five.vercel.app", // URL del frontend desplegado en producción
     methods: ["GET", "POST"],
   }
 });
