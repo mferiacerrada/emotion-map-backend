@@ -40,7 +40,7 @@ const io = new Server(server, {
   cors: {
     origin: "https://emotion-map-five.vercel.app", // URL del frontend desplegado en producción
     methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"], // Asegúrate de permitir los headers necesarios
+    allowedHeaders: ["Access-Control-Allow-Origin"], // Asegúrate de permitir los headers necesarios
   }
 });
 // Array de usuarios
