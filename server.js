@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const ondasRoute = require('./routes/ondasRoute');
 
-const frontendUrl = "https://emotion-map-five.vercel.app/"; // Cambia esta URL por la de tu frontend de Vercel
+const frontendUrl = "https://emotion-map-five.vercel.app"; // Cambia esta URL por la de tu frontend de Vercel
 
 const fs = require('fs');
 console.log(fs.readdirSync(path.join(__dirname, 'utils')));
@@ -40,6 +40,7 @@ const io = new Server(server, {
   cors: {
     origin: "https://emotion-map-five.vercel.app", // URL del frontend desplegado en producción
     methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"], // Asegúrate de permitir los headers necesarios
   }
 });
 // Array de usuarios
@@ -49,7 +50,8 @@ app.use(express.json()); // Middleware para procesar JSON
 app.use('/api', statsRoutes());
 app.use('/api', ondasRoute());
 app.use(cors({
-  origin: 'https://emotion-map-five.vercel.app' // Permite solicitudes solo de tu dominio
+  origin: 'https://emotion-map-five.vercel.app', // Permite solicitudes solo de tu dominio
+  methods: ["GET", "POST"],
 }));
 
 // Colores disponibles para usuarios
