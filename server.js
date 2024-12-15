@@ -58,13 +58,36 @@ const allowedOrigins = [
 ];
 
 // Configuración de CORS para API REST
+// app.use(cors({
+//   origin: allowedOrigins,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   allowedHeaders: ['Content-Type'],
+// }));
+
+
+
+// // Configuración de CORS para Socket.io
+// const io = new Server(server, {
+//   cors: {
+//     origin: allowedOrigins,
+//     methods: ['GET', 'POST'],
+//     allowedHeaders: ['Content-Type'],
+//   },
+// });
+
+// Configuración de CORS para API REST
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function (origin, callback) {
+    // Permitir solicitudes desde orígenes permitidos o herramientas sin origen
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type'],
 }));
-
-
 
 // Configuración de CORS para Socket.io
 const io = new Server(server, {
