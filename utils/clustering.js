@@ -1,4 +1,4 @@
-const { getDistance } = require('geolib');
+const { getDistance } = require("geolib");
 
 // Realizar clustering
 const performClustering = (users) => {
@@ -10,7 +10,6 @@ const performClustering = (users) => {
   }
 
   const MAX_DISTANCE_THRESHOLD = 50 * 1000; // 50 km en metros
-
   const clusters = Array(coordinates.length).fill(-1);
   const centroids = [];
 
@@ -50,30 +49,55 @@ const findNearestCity = (centroid, cities) => {
     return null;
   }
 
-  const nearestCity = cities.reduce((nearest, city) => {
-    const dist = getDistance(
-      { latitude: centroid[0], longitude: centroid[1] },
-      { latitude: city.lat, longitude: city.lng }
-    );
+  if (!Array.isArray(cities) || cities.length === 0) {
+    console.error("La lista de ciudades es inválida o está vacía.");
+    return null;
+  }
 
-    return dist < nearest.distance
-      ? { ...city, distance: dist }
-      : nearest;
-  }, { distance: Infinity });
+  const nearestCity = cities.reduce(
+    (nearest, city) => {
+      const dist = getDistance(
+        { latitude: centroid[0], longitude: centroid[1] },
+        { latitude: city.lat, longitude: city.lng }
+      );
+      return dist < nearest.distance ? { ...city, distance: dist } : nearest;
+    },
+    { distance: Infinity }
+  );
 
   return nearestCity.distance < 50 * 1000 ? nearestCity : null;
 };
 
 // Resolver city y country para usuarios sin completar dentro de clusters
 const resolverUsuariosSinCityCountry = (users, cities, countries) => {
+  // Validaciones iniciales
+  if (!Array.isArray(users) || users.length === 0) {
+    console.error("La lista de usuarios es inválida o está vacía.");
+    return;
+  }
+
+  if (!Array.isArray(cities) || cities.length === 0) {
+    console.error("La lista de ciudades es inválida o está vacía.");
+    return;
+  }
+
+  if (!Array.isArray(countries) || countries.length === 0) {
+    console.error("La lista de países es inválida o está vacía.");
+    return;
+  }
+
   const { clusters, centroids } = performClustering(users);
 
   users.forEach((user, index) => {
     if (!user.city || !user.country) {
       const clusterId = clusters[index];
-      const usuariosCercanos = users.filter((_, i) => clusters[i] === clusterId && users[i].city && users[i].country);
+      const usuariosCercanos = users.filter(
+        (_, i) =>
+          clusters[i] === clusterId && users[i].city && users[i].country
+      );
 
       if (usuariosCercanos.length > 0) {
+        // Asignar city y country del usuario cercano
         const usuarioCercano = usuariosCercanos[0];
         user.city = usuarioCercano.city;
         user.country = usuarioCercano.country;
@@ -81,8 +105,14 @@ const resolverUsuariosSinCityCountry = (users, cities, countries) => {
         const nearestCity = findNearestCity(centroids[clusterId], cities);
         if (nearestCity) {
           user.city = nearestCity.name;
-          const country = countries.find(c => c.code === nearestCity.country_code);
-          user.country = country ? country.name : null;
+          const country = Array.isArray(countries)
+            ? countries.find((c) => c.code === nearestCity.country_code)
+            : null;
+          user.country = country ? country.name : "Desconocido";
+        } else {
+          console.warn(
+            `No se encontró una ciudad cercana válida para el cluster ${clusterId}.`
+          );
         }
       }
     }

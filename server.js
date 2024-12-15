@@ -12,6 +12,8 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const ondasRoute = require('./routes/ondasRoute');
 
+let frontEndUrl;
+
 
 // Detección del entorno
 const environment = process.env.NODE_ENV || 'development';
@@ -26,6 +28,7 @@ console.log(fs.readdirSync(path.join(__dirname, 'utils')));
 if (environment === 'development') {
   // Solo en desarrollo
    // Conecta a MongoDB
+   frontEndUrl = 'http://localhost:3000';
    mongoose.connect('mongodb://localhost:27017/EmotionMapDb', {
      useNewUrlParser: true,
      useUnifiedTopology: true,
@@ -34,6 +37,7 @@ if (environment === 'development') {
      .catch(err => console.error('Error al conectar a MongoDB:', err));
 
 }else{
+    frontEndUrl = 'https://www.emotionmap.es';
   // Conecta a MongoDB Cloud
     mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluster.lbswe.mongodb.net/?retryWrites=true&w=majority&appName=EmotionMapCluster', {
     useNewUrlParser: true,
@@ -73,7 +77,7 @@ app.use(cors({
 
 // Configuración de headers adicionales (incluye Access-Control-Allow-Origin)
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://www.emotionmap.es');
+  res.setHeader('Access-Control-Allow-Origin', frontEndUrl);
   console.log('Headers configurados:', res.getHeaders());
   next();
 });
@@ -162,7 +166,7 @@ function generarUsuariosFalsosConcentrados(cantidad = 75) {
 }
 
 // Generar usuarios iniciales
-// generarUsuariosFalsosConcentrados();
+generarUsuariosFalsosConcentrados();
 
 // Socket.IO para manejar conexiones en tiempo real
 io.on('connection', (socket) => {
