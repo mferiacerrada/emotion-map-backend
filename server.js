@@ -12,39 +12,71 @@ const mongoose = require('mongoose');
 const User = require('./models/User');
 const ondasRoute = require('./routes/ondasRoute');
 
+
+// Detección del entorno
+const environment = process.env.NODE_ENV || 'development';
+console.log(`Running in ${environment} mode`);
+
+
+
 const frontendUrl = "https://emotion-map-five.vercel.app"; // Cambia esta URL por la de tu frontend de Vercel
 
 const fs = require('fs');
 console.log(fs.readdirSync(path.join(__dirname, 'utils')));
 
-// Conecta a MongoDB Cloud
-mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluster.lbswe.mongodb.net/?retryWrites=true&w=majority&appName=EmotionMapCluster', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-  .then(() => console.log('Conectado a MongoDB'))
-  .catch(err => console.error('Error al conectar a MongoDB:', err));
+
+// Configuración específica para cada entorno
+if (environment === 'development') {
+  // Solo en desarrollo
+   // Conecta a MongoDB
+   mongoose.connect('mongodb://localhost:27017/EmotionMapDb', {
+     useNewUrlParser: true,
+     useUnifiedTopology: true,
+   })
+     .then(() => console.log('Conectado a MongoDB'))
+     .catch(err => console.error('Error al conectar a MongoDB:', err));
+
+}else{
+  // Conecta a MongoDB Cloud
+    mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluster.lbswe.mongodb.net/?retryWrites=true&w=majority&appName=EmotionMapCluster', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+    .then(() => console.log('Conectado a MongoDB'))
+    .catch(err => console.error('Error al conectar a MongoDB:', err));
+}
+
+
 
 const app = express();
 const server = http.createServer(app);
 
-const allowedOrigins = [frontendUrl, 'http://localhost:3000']; // Incluye tu URL local si es necesario
+const allowedOrigins = [
+  frontendUrl, // Tu URL de frontend (por ejemplo, en producción)
+  'http://localhost:3000', // URL local para desarrollo
+  'http://127.0.0.1:3000' // Por si se accede con la IP local
+];
+
+// Configuración de CORS para API REST
 app.use(cors({
   origin: allowedOrigins,
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type'],
-  credentials: true, // Si necesitas enviar cookies o credenciales
 }));
+
 
 
 // Configuración de CORS para Socket.io
 const io = new Server(server, {
   cors: {
-    origin: frontendUrl, // Permitir conexiones WebSocket de tu frontend
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type'], // Permitir encabezados necesarios para las conexiones
+    allowedHeaders: ['Content-Type'],
   },
 });
+
+// Verificar configuración en consola
+console.log('CORS configurado para:', allowedOrigins);
 
 // Array de usuarios
 global.usuarios = [];
@@ -66,7 +98,7 @@ const coloresDisponibles = [
 ];
 
 // Generar usuarios falsos iniciales y guardarlos en MongoDB
-function generarUsuariosFalsosConcentrados(cantidad = 10) {
+function generarUsuariosFalsosConcentrados(cantidad = 500) {
   const regiones = [
     { minLat: 40.4, maxLat: 40.5, minLng: -3.7, maxLng: -3.6 }, // Madrid
     { minLat: 48.85, maxLat: 48.9, minLng: 2.3, maxLng: 2.4 }, // París
