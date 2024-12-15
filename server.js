@@ -18,9 +18,6 @@ const environment = process.env.NODE_ENV || 'development';
 console.log(`Running in ${environment} mode`);
 
 
-
-const frontendUrl = "https://emotion-map-five.vercel.app"; // Cambia esta URL por la de tu frontend de Vercel
-
 const fs = require('fs');
 console.log(fs.readdirSync(path.join(__dirname, 'utils')));
 
@@ -52,9 +49,10 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
-  frontendUrl, // Tu URL de frontend (por ejemplo, en producción)
+  'https://emotionmap.es', // Tu URL de frontend (por ejemplo, en producción)
   'http://localhost:3000', // URL local para desarrollo
-  'http://127.0.0.1:3000' // Por si se accede con la IP local
+  'http://127.0.0.1:3000',
+  "https://emotion-map-five.vercel.app" // Por si se accede con la IP local
 ];
 
 // Configuración de CORS para API REST
@@ -121,7 +119,7 @@ const coloresDisponibles = [
 ];
 
 // Generar usuarios falsos iniciales y guardarlos en MongoDB
-function generarUsuariosFalsosConcentrados(cantidad = 500) {
+function generarUsuariosFalsosConcentrados(cantidad = 75) {
   const regiones = [
     { minLat: 40.4, maxLat: 40.5, minLng: -3.7, maxLng: -3.6 }, // Madrid
     { minLat: 48.85, maxLat: 48.9, minLng: 2.3, maxLng: 2.4 }, // París
