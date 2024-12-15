@@ -49,29 +49,13 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
+  'https://www.emotionmap.es',
   'https://emotionmap.es', // Tu URL de frontend (por ejemplo, en producción)
   'http://localhost:3000', // URL local para desarrollo
   'http://127.0.0.1:3000',
   "https://emotion-map-five.vercel.app" // Por si se accede con la IP local
 ];
 
-// Configuración de CORS para API REST
-// app.use(cors({
-//   origin: allowedOrigins,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//   allowedHeaders: ['Content-Type'],
-// }));
-
-
-
-// // Configuración de CORS para Socket.io
-// const io = new Server(server, {
-//   cors: {
-//     origin: allowedOrigins,
-//     methods: ['GET', 'POST'],
-//     allowedHeaders: ['Content-Type'],
-//   },
-// });
 
 // Configuración de CORS para API REST
 app.use(cors({
@@ -86,6 +70,13 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type'],
 }));
+
+// Configuración de headers adicionales (incluye Access-Control-Allow-Origin)
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://www.emotionmap.es');
+  console.log('Headers configurados:', res.getHeaders());
+  next();
+});
 
 // Configuración de CORS para Socket.io
 const io = new Server(server, {
@@ -171,7 +162,7 @@ function generarUsuariosFalsosConcentrados(cantidad = 75) {
 }
 
 // Generar usuarios iniciales
-generarUsuariosFalsosConcentrados();
+// generarUsuariosFalsosConcentrados();
 
 // Socket.IO para manejar conexiones en tiempo real
 io.on('connection', (socket) => {
