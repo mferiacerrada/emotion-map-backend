@@ -166,7 +166,7 @@ function generarUsuariosFalsosConcentrados(cantidad = 75) {
 }
 
 // Generar usuarios iniciales
-generarUsuariosFalsosConcentrados();
+// generarUsuariosFalsosConcentrados();
 
 // Socket.IO para manejar conexiones en tiempo real
 io.on('connection', (socket) => {
