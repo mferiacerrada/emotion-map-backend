@@ -39,7 +39,7 @@ if (environment === 'development') {
 }else{
     frontEndUrl = 'https://www.emotionmap.es';
   // Conecta a MongoDB Cloud
-    mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluster.lbswe.mongodb.net/?retryWrites=true&w=majority&appName=EmotionMapCluster', {
+    mongoose.connect('mongodb+srv://MapEmotionUser:9Hz3drgCW2QIr43O@emotionmapcluster.lbswe.mongodb.net/?retryWrites=true&w=majority&appName=EmotionMapDb', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
