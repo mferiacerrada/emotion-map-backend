@@ -114,7 +114,7 @@ const coloresDisponibles = [
 ];
 
 // Generar usuarios falsos iniciales y guardarlos en MongoDB
-function generarUsuariosFalsosConcentrados(cantidad = 75) {
+function generarUsuariosFalsosConcentrados(cantidad = 120) {
   const regiones = [
     { minLat: 40.4, maxLat: 40.5, minLng: -3.7, maxLng: -3.6 }, // Madrid
     { minLat: 48.85, maxLat: 48.9, minLng: 2.3, maxLng: 2.4 }, // París
@@ -166,7 +166,7 @@ function generarUsuariosFalsosConcentrados(cantidad = 75) {
 }
 
 // Generar usuarios iniciales
-// generarUsuariosFalsosConcentrados();
+generarUsuariosFalsosConcentrados();
 
 // Socket.IO para manejar conexiones en tiempo real
 io.on('connection', (socket) => {
